@@ -1,0 +1,2 @@
+include ':app', ':xzweb-inter', ':xzweb-webkit', ':xzweb-x5web', ':xzweb-enhanced', ':xzweb-cache', ':xzweb-bridge'
+rootProject.name='XZWeb'
