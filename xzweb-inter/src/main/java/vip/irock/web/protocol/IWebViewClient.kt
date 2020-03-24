@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 
 interface IWebViewClient {
 
-    fun shouldOverrideUrlLoading(view: IWebView, var2: String): Boolean {
+    fun shouldOverrideUrlLoading(view: IWebView, url: String): Boolean {
         return false
     }
 

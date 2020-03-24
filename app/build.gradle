@@ -35,4 +35,5 @@ dependencies {
     implementation project(':xzweb-x5web')
     implementation project(':xzweb-inter')
     implementation project(':xzweb-enhanced')
+    implementation project(':xzweb-cache')
 }

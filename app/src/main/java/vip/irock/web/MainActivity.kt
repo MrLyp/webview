@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewStub
 import com.xzweb.android.R
+import okhttp3.OkHttpClient
 import vip.irock.web.adapters.WebDelegate
 import vip.irock.web.adapters.XZRuntime
+import vip.irock.web.cache.CacheConfig
+import vip.irock.web.cache.WebResourceCache
 import vip.irock.web.protocol.IWebView
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,8 +26,13 @@ class MainActivity : AppCompatActivity() {
             viewStub.layoutResource = R.layout.widget_webkit
         }
         mWebView = viewStub.inflate() as IWebView
+        WebResourceCache.setCacheConfig(CacheConfig.build(this){
+
+        })
+        WebResourceCache.setOkHttpBuilder(OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS))
         WebDelegate.takeOver(this, mWebView)
-        mWebView.loadUrl("file:///android_asset/demo.html")
+//        mWebView.loadUrl("file:///android_asset/demo.html")
+        mWebView.loadUrl("https://www.jianshu.com/")
     }
 
     override fun onResume() {

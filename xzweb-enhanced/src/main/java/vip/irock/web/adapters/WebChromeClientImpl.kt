@@ -1,6 +1,7 @@
 package vip.irock.web.adapters
 
 import android.util.Log
+import android.view.View
 import vip.irock.web.bridge.NativeBridge
 import vip.irock.web.protocol.IConsoleMessage
 import vip.irock.web.protocol.IJsPromptResult
@@ -26,5 +27,21 @@ class WebChromeClientImpl() : IWebChromeClient {
     override fun onConsoleMessage(var1: IConsoleMessage): Boolean {
         Log.d(var1.sourceId(), "line ${var1.lineNumber()},${var1.message()}")
         return true
+    }
+
+    override fun onShowCustomView(view: View, callback: IWebChromeClient.ICustomViewCallback) {
+        super.onShowCustomView(view, callback)
+    }
+
+    override fun onShowCustomView(
+        view: View,
+        requestedOrientation: Int,
+        callback: IWebChromeClient.ICustomViewCallback
+    ) {
+        super.onShowCustomView(view, requestedOrientation, callback)
+    }
+
+    override fun onHideCustomView() {
+        super.onHideCustomView()
     }
 }

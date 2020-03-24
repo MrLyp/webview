@@ -13,7 +13,7 @@ object WebDelegate {
             context,
             webSetting = webView.getSettings()
         )
-        webView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
+        webView.setWebContentsDebuggingEnabled(true)
         NativeBridge.init(context)
         webView.setWebChromeClient(WebChromeClientImpl())
         webView.setWebViewClient(WebViewClientImpl())
@@ -64,6 +64,6 @@ object WebDelegate {
         webSetting.setDomStorageEnabled(true)
         //关闭webview自动保存密码的功能
         webSetting.setSavePassword(false)
-        webSetting.setCacheMode(IWebSettings.LOAD_DEFAULT)
+        webSetting.setCacheMode(IWebSettings.LOAD_CACHE_ELSE_NETWORK)
     }
 }

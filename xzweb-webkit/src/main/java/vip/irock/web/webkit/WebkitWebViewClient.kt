@@ -19,9 +19,6 @@ class WebkitWebViewClient(
     }
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return false
-        }
         return webViewClientDelegate.shouldOverrideUrlLoading(
             webViewProxy,
             WebkitWebResourceRequest(request)

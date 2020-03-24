@@ -88,11 +88,11 @@ interface IWebChromeClient {
 
     }
 
-    fun onShowCustomView(var1: View, var2: ICustomViewCallback) {
+    fun onShowCustomView(view: View, callback: ICustomViewCallback) {
 
     }
 
-    fun onShowCustomView(var1: View, var2: Int, var3: ICustomViewCallback) {
+    fun onShowCustomView(view: View, requestedOrientation: Int, callback: ICustomViewCallback) {
 
     }
 
