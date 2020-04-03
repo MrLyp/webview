@@ -303,23 +303,6 @@ class X5WebView : FrameLayout, IWebView {
     override fun setDownloadListener(downloadListener: DownloadListener) {
         webViewProxy.setDownloadListener(object :
             DownloadListener, com.tencent.smtt.sdk.DownloadListener {
-            override fun onDownloadStart(
-                var1: String,
-                var2: String,
-                var3: ByteArray,
-                var4: String,
-                var5: String,
-                var6: String,
-                var7: Long,
-                var9: String,
-                var10: String
-            ) {
-
-            }
-
-            override fun onDownloadVideo(var1: String, var2: Long, var4: Int) {
-
-            }
 
             override fun onDownloadStart(
                 url: String?,
@@ -348,14 +331,22 @@ class X5WebView : FrameLayout, IWebView {
         webViewProxy.setHttpAuthUsernamePassword(host, realm, username, password)
     }
 
-    override fun setWebViewClient(var1: IWebViewClient) {
-        webViewProxy.webViewClient =
-            X5WebViewClient(this, var1)
+    override fun setWebViewClient(client: IWebViewClient?) {
+        if (client != null) {
+            webViewProxy.webViewClient =
+                X5WebViewClient(this, client)
+        } else {
+            webViewProxy.webViewClient = null
+        }
     }
 
-    override fun setWebChromeClient(var1: IWebChromeClient) {
-        webViewProxy.webChromeClient =
-            X5WebChromeClient(this, var1)
+    override fun setWebChromeClient(client: IWebChromeClient?) {
+        if (client != null) {
+            webViewProxy.webChromeClient =
+                X5WebChromeClient(this, client)
+        } else {
+            webViewProxy.webChromeClient = null
+        }
     }
 
     override fun stopLoading() {

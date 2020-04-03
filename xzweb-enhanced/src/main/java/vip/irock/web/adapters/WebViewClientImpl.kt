@@ -1,15 +1,15 @@
 package vip.irock.web.adapters
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.webkit.URLUtil
 import vip.irock.web.bridge.NativeBridge
 import vip.irock.web.cache.WebResourceCache
-import vip.irock.web.protocol.IWebResourceRequest
-import vip.irock.web.protocol.IWebResourceResponse
-import vip.irock.web.protocol.IWebView
-import vip.irock.web.protocol.IWebViewClient
+import vip.irock.web.protocol.*
 
-class WebViewClientImpl : IWebViewClient {
+class WebViewClientImpl(private val viewHost: IViewHost) : IWebViewClient {
+
+    private val mSecuritySupport = SecuritySupport(viewHost)
 
     override fun shouldOverrideUrlLoading(view: IWebView, url: String): Boolean {
         Log.d("lyp", "url = $url")
@@ -34,8 +34,14 @@ class WebViewClientImpl : IWebViewClient {
         return this.shouldOverrideUrlLoading(view, request.getUrl().toString())
     }
 
+    override fun onPageStarted(view: IWebView, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+        viewHost.onPageStarted()
+    }
+
     override fun onPageFinished(view: IWebView, url: String?) {
         NativeBridge.inject(view)
+        viewHost.onPageFinished(url)
     }
 
     override fun shouldInterceptRequest(
@@ -47,6 +53,11 @@ class WebViewClientImpl : IWebViewClient {
 
     override fun shouldInterceptRequest(view: IWebView, url: String?): IWebResourceResponse? {
         return super.shouldInterceptRequest(view, url)
+    }
+
+    override fun onReceivedSslError(view: IWebView, handler: ISslErrorHandler, error: ISslError) {
+        super.onReceivedSslError(view, handler, error)
+        mSecuritySupport.onReceivedSslError(handler, error)
     }
 
     companion object {

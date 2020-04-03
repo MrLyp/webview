@@ -1,59 +1,65 @@
 package vip.irock.web
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.view.ViewStub
+import android.view.inputmethod.EditorInfo
+import android.widget.AutoCompleteTextView
+import androidx.appcompat.app.AppCompatActivity
 import com.xzweb.android.R
-import okhttp3.OkHttpClient
-import vip.irock.web.adapters.WebDelegate
-import vip.irock.web.adapters.XZRuntime
-import vip.irock.web.cache.CacheConfig
+import kotlinx.android.synthetic.main.activity_main.*
+import vip.irock.web.adapters.WebViewHost
 import vip.irock.web.cache.WebResourceCache
-import vip.irock.web.protocol.IWebView
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mWebView: IWebView
+    private lateinit var mWebViewHost: WebViewHost
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewStub: ViewStub = findViewById(R.id.view_stub)
-        if (XZRuntime.isX5Enabled()) {
-            viewStub.layoutResource = R.layout.widget_x5
-        } else {
-            viewStub.layoutResource = R.layout.widget_webkit
+        val autoCompleteTextView = findViewById<AutoCompleteTextView>(R.id.autotext)
+        autoCompleteTextView.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                val url = autoCompleteTextView.text.toString()
+                mWebViewHost.getWebView().loadUrl(url)
+                true
+            }
+            false
         }
-        mWebView = viewStub.inflate() as IWebView
-        WebResourceCache.setCacheConfig(CacheConfig.build(this){
+        mWebViewHost = findViewById(R.id.webViewHost)
 
-        })
-        WebResourceCache.setOkHttpBuilder(OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS))
-        WebDelegate.takeOver(this, mWebView)
+        redirect.setOnClickListener {
+            val url = autoCompleteTextView.text.toString()
+            mWebViewHost.getWebView().loadUrl(url)
+        }
+
 //        mWebView.loadUrl("file:///android_asset/demo.html")
-        mWebView.loadUrl("https://www.jianshu.com/")
+        mWebViewHost.getWebView().loadUrl("https://www.jianshu.com/")
+        WebResourceCache.preload(this, "https://github.com")
     }
 
     override fun onResume() {
         super.onResume()
-        mWebView.onResume()
+        mWebViewHost.getWebView().onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mWebView.onPause()
+        mWebViewHost.getWebView().onPause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mWebView.destroy()
+        mWebViewHost.release()
     }
 
     override fun onBackPressed() {
-        if (mWebView.canGoBack())
-            mWebView.goBack()
-        else
+        if (mWebViewHost.onBackPressed().not())
             super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mWebViewHost.onFileChooserResult(requestCode, resultCode, data)
     }
 }

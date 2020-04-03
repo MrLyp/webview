@@ -1,5 +1,6 @@
 package vip.irock.web.protocol
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Picture
 import android.graphics.Point
@@ -162,9 +163,9 @@ interface IWebView {
 
     fun setHttpAuthUsernamePassword(host: String, realm: String, username: String, password: String)
 
-    fun setWebViewClient(var1: IWebViewClient)
+    fun setWebViewClient(client: IWebViewClient?)
 
-    fun setWebChromeClient(var1: IWebChromeClient)
+    fun setWebChromeClient(client: IWebChromeClient?)
 
     fun stopLoading()
 
@@ -217,6 +218,8 @@ interface IWebView {
     fun setWebContentsDebuggingEnabled(enable: Boolean) {
 
     }
+
+    fun getContext() : Context
 
     class WebViewTransport {
         @get:Synchronized
