@@ -32,7 +32,7 @@ interface IWebChromeClient {
 
     }
 
-    fun onGeolocationPermissionsShowPrompt(var1: String, var2: GeolocationPermissionsCallback) {
+    fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissionsCallback) {
 
     }
 
@@ -66,7 +66,7 @@ interface IWebChromeClient {
         return false
     }
 
-    fun onProgressChanged(var1: IWebView, var2: Int) {
+    fun onProgressChanged(var1: IWebView, progress: Int) {
 
     }
 
@@ -80,7 +80,7 @@ interface IWebChromeClient {
 
     }
 
-    fun onReceivedTitle(var1: IWebView, var2: String) {
+    fun onReceivedTitle(var1: IWebView, title: String) {
 
     }
 
@@ -109,9 +109,9 @@ interface IWebChromeClient {
     }
 
     fun onShowFileChooser(
-        var1: IWebView,
-        var2: ValueCallback<Array<Uri>>,
-        var3: FileChooserParams
+        webView: IWebView,
+        filePathCallback: ValueCallback<Array<Uri>>,
+        fileChooserParams: FileChooserParams
     ): Boolean {
         return false
     }

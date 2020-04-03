@@ -15,7 +15,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class CacheInterceptor(
+class RemoteCacheInterceptor(
     private val cacheConfig: CacheConfig,
     private val okHttpBuilder: OkHttpClient.Builder
 ) : WebResourceInterceptor {
@@ -57,14 +57,16 @@ class CacheInterceptor(
 
         val httpRequest: Request = reqBuilder.cacheControl(cacheControl).build()
         val response: Response = mHttpClient.newCall(httpRequest).execute()
+        val code = response.code
+
+        // check range
+        if ((code in 100..299).not() && (code in 400..599).not())
+            return null
         val cacheRes: Response? = response.cacheResponse
         val data = response.body?.byteStream() ?: return null
         val contentType: MediaType? = response.body?.contentType()
 
-        val mimeType: String = contentType?.toString()
-            ?: MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
-            ?: return null
+        val mimeType: String = parseMimeType(contentType, url) ?: return null
 
         val encoding: String = contentType?.charset(Charset.forName("UTF-8"))?.toString() ?: "UTF-8"
 
@@ -91,5 +93,22 @@ class CacheInterceptor(
             headers,
             data
         )
+    }
+
+    /**
+     * The MIME type and character encoding must be specified as separate parameters
+     *
+     * @param contentType
+     * @param url
+     * @return
+     */
+    private fun parseMimeType(contentType: MediaType?, url: String): String? {
+        val typeStr = contentType?.toString()
+        if (typeStr == null) {
+            return MimeTypeMap.getSingleton()
+                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(url))
+        } else {
+            return typeStr.split(";")[0]
+        }
     }
 }

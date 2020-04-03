@@ -302,24 +302,15 @@ class WebkitWebView : FrameLayout, IWebView {
     }
 
     override fun setDownloadListener(downloadListener: DownloadListener) {
-        webViewProxy.setDownloadListener(object :
-            android.webkit.DownloadListener {
-            override fun onDownloadStart(
-                url: String?,
-                userAgent: String?,
-                contentDisposition: String?,
-                mimetype: String?,
-                contentLength: Long
-            ) {
-                downloadListener.onDownloadStart(
-                    url,
-                    userAgent,
-                    contentDisposition,
-                    mimetype,
-                    contentLength
-                )
-            }
-        })
+        webViewProxy.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            downloadListener.onDownloadStart(
+                url,
+                userAgent,
+                contentDisposition,
+                mimetype,
+                contentLength
+            )
+        }
     }
 
     override fun setHttpAuthUsernamePassword(
@@ -331,14 +322,22 @@ class WebkitWebView : FrameLayout, IWebView {
         webViewProxy.setHttpAuthUsernamePassword(host, realm, username, password)
     }
 
-    override fun setWebViewClient(var1: IWebViewClient) {
-        webViewProxy.webViewClient =
-            WebkitWebViewClient(this, var1)
+    override fun setWebViewClient(client: IWebViewClient?) {
+        if (client != null) {
+            webViewProxy.webViewClient =
+                WebkitWebViewClient(this, client)
+        } else {
+            webViewProxy.webViewClient = null
+        }
     }
 
-    override fun setWebChromeClient(var1: IWebChromeClient) {
-        webViewProxy.webChromeClient =
-            WebkitWebChromeClient(this, var1)
+    override fun setWebChromeClient(client: IWebChromeClient?) {
+        if (client != null) {
+            webViewProxy.webChromeClient =
+                WebkitWebChromeClient(this, client)
+        } else {
+            webViewProxy.webChromeClient = null
+        }
     }
 
     override fun stopLoading() {
