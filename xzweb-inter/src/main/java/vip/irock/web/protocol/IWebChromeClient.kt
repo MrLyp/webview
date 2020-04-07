@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Message
 import android.view.View
+import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 
 interface IWebChromeClient {
@@ -116,13 +117,12 @@ interface IWebChromeClient {
         return false
     }
 
-    fun onGeolocationStopUpdating() {
-
+    fun onPermissionRequest(request: PermissionRequest) {
+        request.deny()
     }
 
-    fun onGeolocationStartUpdating(var1: ValueCallback<Location>, var2: ValueCallback<Bundle>) {
+    fun onPermissionRequestCanceled(request: PermissionRequest?) {}
 
-    }
 
     abstract class FileChooserParams {
 

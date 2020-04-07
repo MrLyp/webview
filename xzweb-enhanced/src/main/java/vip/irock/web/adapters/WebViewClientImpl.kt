@@ -1,6 +1,7 @@
 package vip.irock.web.adapters
 
 import android.graphics.Bitmap
+import android.os.Message
 import android.util.Log
 import android.webkit.URLUtil
 import vip.irock.web.bridge.NativeBridge
@@ -60,6 +61,9 @@ class WebViewClientImpl(private val viewHost: IViewHost) : IWebViewClient {
         mSecuritySupport.onReceivedSslError(handler, error)
     }
 
+    override fun onFormResubmission(view: IWebView, var2: Message?, var3: Message?) {
+        var2?.sendToTarget()
+    }
     companion object {
         private const val INTENT_SCHEME = "intent://"
     }

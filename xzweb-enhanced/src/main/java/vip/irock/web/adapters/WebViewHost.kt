@@ -16,6 +16,7 @@ import vip.irock.web.bridge.NativeBridge
 import vip.irock.web.cache.WebViewPool
 import vip.irock.web.protocol.IWebSettings
 import vip.irock.web.protocol.IWebView
+import java.util.regex.Pattern
 
 class WebViewHost @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -109,7 +110,18 @@ class WebViewHost @JvmOverloads constructor(
     }
 
     override fun onReceivedTitle(title: String) {
-        mTitleTv.text = title
+        if (isUrlAuxiliary(title)) {
+            mTitleTv.text = ""
+        } else {
+            mTitleTv.text = title
+        }
+    }
+
+    private fun isUrlAuxiliary(query: String?): Boolean {
+        val matcher = Pattern.compile(
+            "(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;{]+[-A-Za-z0-9+&@#/%=~_|}]"
+        ).matcher(query)
+        return matcher.matches()
     }
 
     override fun onPageStarted() {

@@ -151,10 +151,12 @@ class WebkitWebChromeClient(
     }
 
     override fun onPermissionRequest(request: PermissionRequest) {
-        super.onPermissionRequest(request)
+        webChromeClientDelegate.onPermissionRequest(request)
     }
 
-    override fun onPermissionRequestCanceled(request: PermissionRequest) {}
+    override fun onPermissionRequestCanceled(request: PermissionRequest) {
+        webChromeClientDelegate.onPermissionRequestCanceled(request)
+    }
 
     override fun onJsTimeout(): Boolean {
         return webChromeClientDelegate.onJsTimeout()

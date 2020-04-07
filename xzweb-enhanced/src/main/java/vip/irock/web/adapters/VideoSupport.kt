@@ -18,6 +18,11 @@ class VideoSupport(private val mActivity: Activity) {
     private var mCallback: IWebChromeClient.ICustomViewCallback? = null
     private var mActivityOrientation: Int = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+    private val COVER_SCREEN_PARAMS = FrameLayout.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
+
     fun onShowCustomView(
         view: View,
         callback: IWebChromeClient.ICustomViewCallback,
@@ -27,11 +32,14 @@ class VideoSupport(private val mActivity: Activity) {
         if (activity.isFinishing) {
             return
         }
+        if (mMovieView != null) {
+            callback.onCustomViewHidden()
+            return
+        }
         mCallback = callback
         mMovieView = view
 
         mActivityOrientation = activity.requestedOrientation
-        activity.requestedOrientation = requestedOrientation
 
         val activityWindow: Window = activity.window
         var flagPair: Pair<Int, Int>
@@ -61,36 +69,29 @@ class VideoSupport(private val mActivity: Activity) {
             )
             mFlags.add(flagPair)
         }
-        if (mMovieView != null) {
-            callback.onCustomViewHidden()
-            return
-        }
-        if (mMovieParentView == null) {
-            val mDecorView = activity.window.decorView as FrameLayout
-            mMovieParentView = FrameLayout(activity)
-            mDecorView.addView(mMovieParentView)
-        }
-        mMovieParentView?.addView(mMovieView)
-        mMovieParentView?.visibility = View.VISIBLE
+        val decorView = activity.window.decorView as FrameLayout
+        mMovieParentView = FrameLayout(activity)
+        mMovieParentView?.addView(mMovieView, COVER_SCREEN_PARAMS)
+        decorView.addView(mMovieParentView, COVER_SCREEN_PARAMS)
+        activity.requestedOrientation = requestedOrientation
     }
 
     fun onHideCustomView() {
-        val movieView = mMovieView ?: return
         val activity = mActivity
         if (activity.isFinishing) {
             return
         }
-        activity.requestedOrientation = mActivityOrientation
+
         if (mFlags.isNotEmpty()) {
             for ((first, second) in mFlags) {
                 activity.window.setFlags(second, first)
             }
             mFlags.clear()
         }
-        movieView.visibility = View.GONE
-        mMovieParentView?.removeView(movieView)
-        mMovieParentView?.visibility = View.GONE
-        mCallback?.onCustomViewHidden()
+        val decorView = activity.window.decorView as FrameLayout
+        decorView.removeView(mMovieParentView)
         mMovieView = null
+        mCallback?.onCustomViewHidden()
+        activity.requestedOrientation = mActivityOrientation
     }
 }
