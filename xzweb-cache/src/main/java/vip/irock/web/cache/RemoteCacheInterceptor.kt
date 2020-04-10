@@ -63,6 +63,9 @@ class RemoteCacheInterceptor(
         if ((code in 100..299).not() && (code in 400..599).not())
             return null
         val cacheRes: Response? = response.cacheResponse
+        cacheRes?.run {
+            Log.d("WebCache", "$url cache hit")
+        }
         val data = response.body?.byteStream() ?: return null
         val contentType: MediaType? = response.body?.contentType()
 

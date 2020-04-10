@@ -96,7 +96,7 @@ class X5WebViewClient(
         )
     }
 
-    override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
+    override fun shouldInterceptRequest(view: WebView?, url: String): WebResourceResponse? {
         val response = webViewClientDelegate.shouldInterceptRequest(webViewProxy, url) ?: return null
         return WebResourceResponse(
             response.getMimeType(),

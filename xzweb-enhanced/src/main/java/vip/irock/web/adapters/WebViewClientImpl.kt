@@ -52,8 +52,8 @@ class WebViewClientImpl(private val viewHost: IViewHost) : IWebViewClient {
         return WebResourceCache.interceptRequest(request)
     }
 
-    override fun shouldInterceptRequest(view: IWebView, url: String?): IWebResourceResponse? {
-        return super.shouldInterceptRequest(view, url)
+    override fun shouldInterceptRequest(view: IWebView, url: String): IWebResourceResponse? {
+        return WebResourceCache.interceptRequest(url)
     }
 
     override fun onReceivedSslError(view: IWebView, handler: ISslErrorHandler, error: ISslError) {

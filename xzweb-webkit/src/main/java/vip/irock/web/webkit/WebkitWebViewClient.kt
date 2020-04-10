@@ -86,7 +86,7 @@ class WebkitWebViewClient(
         )
     }
 
-    override fun shouldInterceptRequest(view: WebView?, url: String?): WebResourceResponse? {
+    override fun shouldInterceptRequest(view: WebView?, url: String): WebResourceResponse? {
         val response = webViewClientDelegate.shouldInterceptRequest(webViewProxy, url)
         return WebResourceResponseFactory.createWebResourceResponse(
             response

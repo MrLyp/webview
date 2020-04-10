@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 //        mWebView.loadUrl("file:///android_asset/demo.html")
-        mWebViewHost.getWebView().loadUrl("https://www.jianshu.com/")
-        WebResourceCache.preload(this, "https://github.com")
+//        mWebViewHost.getWebView().loadUrl("https://www.jianshu.com/")
+        WebResourceCache.preload(this, "https://www.esteelauder.com.cn/")
     }
 
     override fun onResume() {

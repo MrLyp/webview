@@ -49,7 +49,7 @@ interface IWebViewClient {
         return null
     }
 
-    fun shouldInterceptRequest(view: IWebView, url: String?): IWebResourceResponse? {
+    fun shouldInterceptRequest(view: IWebView, url: String): IWebResourceResponse? {
         return null
     }
 
