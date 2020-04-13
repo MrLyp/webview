@@ -33,6 +33,7 @@ object WebViewPool {
         } else {
             val wrapper = view.getContext() as MutableContextWrapper
             wrapper.baseContext = context
+            view.loadUrl("about:blank")
             return view
         }
     }

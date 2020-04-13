@@ -13,13 +13,11 @@ class WebViewClientImpl(private val viewHost: IViewHost) : IWebViewClient {
     private val mSecuritySupport = SecuritySupport(viewHost)
 
     override fun shouldOverrideUrlLoading(view: IWebView, url: String): Boolean {
-        Log.d("lyp", "url = $url")
         if ("about:blank" == url) {
-            return true
+            return false
         }
         if (URLUtil.isNetworkUrl(url)) {
-            view.loadUrl(url)
-            return true
+            return false
         }
         // intent
         if (url.startsWith(INTENT_SCHEME)) {
